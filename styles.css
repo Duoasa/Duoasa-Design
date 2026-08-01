@@ -545,13 +545,16 @@ nav.scrolled {
 
 .hero-quotaview-card {
   --hero-card-border-angle: 0deg;
-  position: relative;
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: max(96px, calc(96px + env(safe-area-inset-bottom)));
+  z-index: 3;
   isolation: isolate;
   display: block;
-  width: min(400px, 100%);
+  width: min(400px, calc(100% - 48px));
   aspect-ratio: 5 / 2;
-  flex: 0 0 auto;
-  margin-top: 38px;
+  margin-inline: auto;
   overflow: visible;
   border: 1px solid color-mix(in srgb, var(--hero-fg) 14%, transparent);
   border-radius: 40px;
@@ -4182,13 +4185,13 @@ nav.scrolled {
   }
 
   .hero-quotaview-card {
-    margin-top: 32px;
+    bottom: 80px;
   }
 
   .hero-pills {
     left: 24px;
     right: auto;
-    bottom: max(92px, calc(92px + env(safe-area-inset-bottom)));
+    bottom: max(264px, calc(264px + env(safe-area-inset-bottom)));
     align-items: flex-start;
     max-width: calc(100vw - 48px);
   }
@@ -4196,7 +4199,7 @@ nav.scrolled {
   .scroll-hint {
     top: auto;
     right: 24px;
-    bottom: max(92px, calc(92px + env(safe-area-inset-bottom)));
+    bottom: max(264px, calc(264px + env(safe-area-inset-bottom)));
   }
 
   .section {
@@ -4340,7 +4343,7 @@ nav.scrolled {
   }
 
   .hero-quotaview-card {
-    margin-top: 28px;
+    bottom: 80px;
   }
 
   .section-title {
