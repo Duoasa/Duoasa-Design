@@ -1128,6 +1128,10 @@ nav.scrolled {
   background: linear-gradient(135deg, #000, #061308 58%, #1e8f21);
 }
 
+.project-visual.quotaview-card-visual {
+  background: linear-gradient(135deg, #142738, #204b5e 50%, #d1886d);
+}
+
 .project-visual.robostack-card-visual {
   background: linear-gradient(135deg, #020502, #0a1710 58%, #2f9f43);
 }
