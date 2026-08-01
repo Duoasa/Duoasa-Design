@@ -4169,10 +4169,14 @@ nav.scrolled {
   }
 
   .hero {
-    padding: 128px 24px max(240px, calc(240px + env(safe-area-inset-bottom)));
+    min-height: 100svh;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 128px 24px max(96px, calc(96px + env(safe-area-inset-bottom)));
   }
 
   .hero-content {
+    order: 1;
     width: 100%;
   }
 
@@ -4185,21 +4189,29 @@ nav.scrolled {
   }
 
   .hero-quotaview-card {
-    bottom: 80px;
+    position: relative;
+    right: auto;
+    left: auto;
+    bottom: auto;
+    order: 3;
+    width: min(400px, 100%);
+    margin-top: 40px;
   }
 
   .hero-pills {
-    left: 24px;
+    position: relative;
     right: auto;
-    bottom: max(264px, calc(264px + env(safe-area-inset-bottom)));
-    align-items: flex-start;
-    max-width: calc(100vw - 48px);
+    bottom: auto;
+    left: auto;
+    order: 2;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 32px;
   }
 
   .scroll-hint {
-    top: auto;
-    right: 24px;
-    bottom: max(264px, calc(264px + env(safe-area-inset-bottom)));
+    display: none;
   }
 
   .section {
@@ -4338,12 +4350,12 @@ nav.scrolled {
 
 @media (max-width: 520px) {
   .hero-title {
-    font-size: 46px;
+    font-size: clamp(36px, 11.7vw, 46px);
     letter-spacing: -0.045em;
   }
 
   .hero-quotaview-card {
-    bottom: 80px;
+    margin-top: 36px;
   }
 
   .section-title {
