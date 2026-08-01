@@ -26,6 +26,115 @@ function updateThemeLabel() {
 
 updateThemeLabel();
 
+function initHeroQuotaViewCycle() {
+  const card = document.querySelector(".hero-quotaview-card");
+  const island = card?.querySelector(".hero-quotaview-island");
+  const logo = card?.querySelector(".hero-quotaview-logo");
+  if (!card || !island || !logo) return;
+
+  const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const gifDuration = Number.parseInt(island.dataset.duration || "6000", 10);
+  const islandSource = island.dataset.src;
+  const islandBlobPromise = fetch(`${islandSource}?v=20260802-6s-preserved`).then((response) => {
+    if (!response.ok) throw new Error("Unable to load the QuotaView island animation.");
+    return response.blob();
+  });
+  const timers = new Set();
+  let cycleNumber = 0;
+  let isRunning = false;
+  let runToken = 0;
+  let islandObjectUrl = "";
+
+  function clearTimers() {
+    timers.forEach((timer) => window.clearTimeout(timer));
+    timers.clear();
+  }
+
+  function after(delay, callback) {
+    const timer = window.setTimeout(() => {
+      timers.delete(timer);
+      callback();
+    }, delay);
+    timers.add(timer);
+  }
+
+  function resetStages() {
+    island.classList.remove("is-active", "is-leaving");
+    logo.classList.remove("is-active", "is-leaving");
+  }
+
+  function show(stage) {
+    stage.classList.remove("is-leaving");
+    void stage.offsetWidth;
+    stage.classList.add("is-active");
+  }
+
+  function hide(stage, callback) {
+    stage.classList.remove("is-active");
+    stage.classList.add("is-leaving");
+    after(380, () => {
+      stage.classList.remove("is-leaving");
+      callback();
+    });
+  }
+
+  function releaseIslandGif() {
+    island.removeAttribute("src");
+    if (islandObjectUrl) {
+      URL.revokeObjectURL(islandObjectUrl);
+      islandObjectUrl = "";
+    }
+  }
+
+  function restartIslandGif(blob) {
+    cycleNumber += 1;
+    releaseIslandGif();
+    islandObjectUrl = URL.createObjectURL(blob);
+    island.src = islandObjectUrl;
+    card.dataset.mediaCycle = String(cycleNumber);
+  }
+
+  function runCycle(token) {
+    if (!isRunning || document.hidden || token !== runToken) return;
+    resetStages();
+    islandBlobPromise.then((blob) => {
+      if (!isRunning || document.hidden || token !== runToken) return;
+      restartIslandGif(blob);
+      show(island);
+
+      after(gifDuration, () => {
+        hide(island, () => {
+          releaseIslandGif();
+          show(logo);
+          after(5580, () => {
+            hide(logo, () => runCycle(token));
+          });
+        });
+      });
+    }).catch(() => {
+      card.classList.remove("is-cycling");
+      logo.classList.remove("is-active", "is-leaving");
+    });
+  }
+
+  function start() {
+    clearTimers();
+    resetStages();
+    releaseIslandGif();
+    runToken += 1;
+    isRunning = !reduceMotionQuery.matches && !document.hidden;
+    card.classList.toggle("is-cycling", isRunning);
+
+    if (isRunning) runCycle(runToken);
+  }
+
+  document.addEventListener("visibilitychange", start);
+  reduceMotionQuery.addEventListener?.("change", start);
+  start();
+}
+
+initHeroQuotaViewCycle();
+
 themeBtn.addEventListener("click", () => {
   isDark = !isDark;
   html.setAttribute("data-theme", isDark ? "dark" : "light");
@@ -95,6 +204,12 @@ if (window.matchMedia("(pointer: fine)").matches && cursor) {
         cursorLabelText.style.opacity = "0";
         setTimeout(() => {
           cursorLabelText.textContent = "Wechat Me!";
+          cursorLabelText.style.opacity = "1";
+        }, 120);
+      } else if (item.dataset.cursor === "quotaview") {
+        cursorLabelText.style.opacity = "0";
+        setTimeout(() => {
+          cursorLabelText.textContent = "View QuotaView";
           cursorLabelText.style.opacity = "1";
         }, 120);
       }
@@ -1168,7 +1283,7 @@ function revealFallback() {
   document.querySelectorAll(".line > span, .hero-eyebrow span, .pl-name span").forEach((item) => {
     item.style.transform = "translateY(0)";
   });
-  document.querySelectorAll(".nav-logo, .nav-right, .hero-desc, .pill, .scroll-hint, .project-card, .about-copy p, .about-side > div, .contact-footer").forEach((item) => {
+  document.querySelectorAll(".nav-logo, .nav-right, .hero-desc, .hero-quotaview-card, .pill, .scroll-hint, .project-card, .about-copy p, .about-side > div, .contact-footer").forEach((item) => {
     item.style.opacity = "1";
     item.style.transform = "none";
   });
@@ -1186,6 +1301,7 @@ function initAnimations() {
   function heroIn() {
     gsap.set(".nav-logo, .nav-right", { opacity: 0 });
     gsap.set(".hero-desc", { opacity: 0, y: 16 });
+    gsap.set(".hero-quotaview-card", { opacity: 0, y: 24 });
     gsap.set(".pill", { opacity: 0, x: 32 });
     gsap.set(".project-card", { opacity: 0, y: 40 });
 
@@ -1217,6 +1333,14 @@ function initAnimations() {
       duration: 0.75,
       ease: "power2.out",
       delay: 0.65
+    });
+
+    gsap.to(".hero-quotaview-card", {
+      opacity: 1,
+      y: 0,
+      duration: 0.8,
+      ease: "power2.out",
+      delay: 0.78
     });
 
     gsap.to(".pill", {

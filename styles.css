@@ -418,7 +418,7 @@ nav.scrolled {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: max(112px, calc(112px + env(safe-area-inset-top))) 44px max(112px, calc(112px + env(safe-area-inset-bottom)));
+  padding: max(112px, calc(112px + env(safe-area-inset-top))) 44px max(240px, calc(240px + env(safe-area-inset-bottom)));
   overflow: hidden;
   background: var(--hero-bg);
   color: var(--hero-fg);
@@ -541,6 +541,170 @@ nav.scrolled {
   font-weight: 300;
   line-height: 1.65;
   text-align: center;
+}
+
+.hero-quotaview-card {
+  --hero-card-border-angle: 0deg;
+  position: relative;
+  isolation: isolate;
+  display: block;
+  width: min(400px, 100%);
+  aspect-ratio: 5 / 2;
+  flex: 0 0 auto;
+  margin-top: 38px;
+  overflow: visible;
+  border: 1px solid color-mix(in srgb, var(--hero-fg) 14%, transparent);
+  border-radius: 40px;
+  corner-shape: squircle;
+  background: #8aa9d9 url("assets/cases/quotaview/hero-promo.png?v=20260802-media-cycle") center / cover no-repeat;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035), 0 18px 54px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s var(--ease);
+}
+
+.hero-quotaview-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  corner-shape: squircle;
+  pointer-events: none;
+}
+
+.hero-quotaview-media {
+  position: absolute;
+  top: 57.9%;
+  left: 50%;
+  display: block;
+  height: auto;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.84);
+  transform-origin: center;
+  filter: blur(7px);
+  will-change: transform, opacity, filter;
+}
+
+.hero-quotaview-island {
+  width: 67.7%;
+}
+
+.hero-quotaview-logo {
+  width: 52%;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  filter: none;
+}
+
+.hero-quotaview-card.is-cycling .hero-quotaview-logo {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.84);
+  filter: blur(7px);
+}
+
+.hero-quotaview-card.is-cycling .hero-quotaview-media.is-active {
+  animation: hero-quotaview-media-in 0.58s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-quotaview-card.is-cycling .hero-quotaview-media.is-leaving {
+  animation: hero-quotaview-media-out 0.38s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+@keyframes hero-quotaview-media-in {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 7px)) scale(0.82);
+    filter: blur(8px);
+  }
+  62% {
+    opacity: 1;
+    transform: translate(-50%, calc(-50% - 1px)) scale(1.025);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes hero-quotaview-media-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% - 4px)) scale(0.94);
+    filter: blur(6px);
+  }
+}
+
+.hero-quotaview-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: 2px;
+  border-radius: inherit;
+  corner-shape: squircle;
+  background: conic-gradient(
+    from var(--hero-card-border-angle),
+    transparent 0deg,
+    transparent 242deg,
+    rgba(100, 199, 255, 0.24) 276deg,
+    rgba(173, 220, 255, 0.92) 306deg,
+    rgba(255, 255, 255, 1) 322deg,
+    rgba(244, 172, 255, 0.82) 338deg,
+    transparent 360deg
+  );
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  filter: drop-shadow(0 0 6px rgba(100, 199, 255, 0.72)) drop-shadow(0 0 16px rgba(132, 105, 255, 0.48));
+  animation: hero-card-border-flow 4.2s linear infinite;
+  transition: filter 0.35s ease;
+}
+
+@property --hero-card-border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes hero-card-border-flow {
+  to {
+    --hero-card-border-angle: 360deg;
+  }
+}
+
+.hero-quotaview-card:hover {
+  border-color: color-mix(in srgb, var(--hero-fg) 28%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 0 16px rgba(255, 255, 255, 0.34),
+    0 0 42px rgba(255, 255, 255, 0.22),
+    0 24px 72px rgba(255, 255, 255, 0.14);
+  transform: translateY(-3px);
+}
+
+.hero-quotaview-card:hover::before {
+  filter:
+    drop-shadow(0 0 7px rgba(255, 255, 255, 0.98))
+    drop-shadow(0 0 18px rgba(255, 255, 255, 0.76))
+    drop-shadow(0 0 34px rgba(255, 255, 255, 0.5));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-quotaview-card::before {
+    animation: none;
+  }
+
+  .hero-quotaview-media {
+    animation: none !important;
+  }
 }
 
 .hero-pills {
@@ -4002,7 +4166,7 @@ nav.scrolled {
   }
 
   .hero {
-    padding: 128px 24px max(176px, calc(176px + env(safe-area-inset-bottom)));
+    padding: 128px 24px max(240px, calc(240px + env(safe-area-inset-bottom)));
   }
 
   .hero-content {
@@ -4015,6 +4179,10 @@ nav.scrolled {
 
   .hero-bottom {
     display: block;
+  }
+
+  .hero-quotaview-card {
+    margin-top: 32px;
   }
 
   .hero-pills {
@@ -4169,6 +4337,10 @@ nav.scrolled {
   .hero-title {
     font-size: 46px;
     letter-spacing: -0.045em;
+  }
+
+  .hero-quotaview-card {
+    margin-top: 28px;
   }
 
   .section-title {
