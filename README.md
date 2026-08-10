@@ -5,6 +5,12 @@
 <h1 align="center">Duoasa Design</h1>
 
 <p align="center">
+  <strong>English</strong>
+  &middot;
+  <a href="README.zh-CN.md">简体中文</a>
+</p>
+
+<p align="center">
   An AI-assisted personal design site built with OpenAI Codex, WebGL motion, and rule-driven static front-end workflows.
 </p>
 
@@ -24,6 +30,8 @@
   &middot;
   <a href="#codex-collaboration-workflow">Codex Workflow</a>
   &middot;
+  <a href="#build-your-own-site-with-codex">Build Your Site</a>
+  &middot;
   <a href="#deployment">Deployment</a>
 </p>
 
@@ -33,7 +41,7 @@
 
 Duoasa Design is the personal design site of XuChenChen / Duoasa and an AI-assisted design-to-code project built with [OpenAI Codex](https://openai.com/codex/).
 
-This repository is shared for the developer community as a record of how a designer can work with a coding agent to turn visual direction, interaction rules, motion references, and maintenance constraints into a static production website.
+This repository is shared for the developer community as a record of how a full-stack design engineer can work with a coding agent to turn visual direction, interaction rules, motion references, and maintenance constraints into a static production website.
 
 ## What This Project Explores
 
@@ -45,7 +53,7 @@ This repository is shared for the developer community as a record of how a desig
 
 ## About Duoasa
 
-Duoasa is a UI/UX designer interested in the overlap between product logic, visual systems, interaction rhythm, motion design, and AI-assisted creation.
+Duoasa is a full-stack design engineer interested in the overlap between product logic, visual systems, interaction rhythm, motion design, front-end implementation, and AI-assisted creation.
 
 The design direction of this site favors clear hierarchy, precise spacing, responsive motion, and expressive atmosphere. It uses code as a medium for shaping visual memory, not only as a way to publish static pages.
 
@@ -65,15 +73,23 @@ For AI-assisted front-end work, the useful pattern is not a single prompt. The u
 
 ## Rule Documents
 
-Rule documents are treated as part of the source code. They turn repeated design, implementation, and review decisions into durable instructions for future AI-assisted development sessions.
+Rule documents are treated as part of the source code. They turn repeated design, implementation, review, and maintenance decisions into durable instructions for future AI-assisted development sessions. Instead of asking Codex to infer every constraint from the current page, the repository records the decisions that must survive across prompts, contributors, and future redesigns.
 
-The root workflow entry is [AGENTS.md](AGENTS.md). It works as a lightweight rule index: before making changes, Codex checks the task type and reads the matching Markdown rule file.
+The root workflow entry is [AGENTS.md](AGENTS.md). It works as a lightweight routing layer: before changing files, Codex checks the task type, identifies the affected surface, and reads the matching Markdown rule file. Focused rule documents then define scope boundaries, protected implementation patterns, asset ownership, required verification, and the conditions for considering a task complete.
 
 | Document | Role | When it applies |
 | --- | --- | --- |
 | [AGENTS.md](AGENTS.md) | Agent workflow index for this repository | Before making repository changes; it decides which rule document should be read first |
 | [Case Study Page Independence Rules](cases/README.md) | Keeps second-level project pages isolated and safe to edit | Before creating, freezing, editing, or refactoring any project case study page |
 | [External Interaction Component Integration Guidelines](docs/external-interaction-component-guidelines.md) | Defines how to import, adapt, and verify external animated or interactive components | Before using WebGL, canvas, shader backgrounds, React Bits exports, scroll effects, pointer-reactive visuals, or other open-source interaction components |
+
+Together, these documents form a small repository-specific operating model for Codex:
+
+1. **Route the task.** `AGENTS.md` decides which specialized rules apply before implementation begins.
+2. **Protect scope.** Each rule names the files and surfaces that may change, reducing accidental edits to finished pages.
+3. **Preserve invariants.** Page isolation, rendering behavior, source fidelity, asset ownership, and cache updates are written as explicit requirements.
+4. **Define verification.** Rules describe what must be checked in code and in the rendered page before handoff.
+5. **Capture new decisions.** When a workflow produces a durable constraint, it can be promoted from conversation into a new rule file and linked from `AGENTS.md`.
 
 Current rule coverage includes:
 
@@ -84,6 +100,69 @@ Current rule coverage includes:
 - cache-version query strings are updated when changed CSS or JavaScript must be reloaded
 
 This structure is intentionally extensible: new rule files can be added under `docs/` or a feature-specific folder, then referenced from `AGENTS.md` with a clear trigger condition.
+
+When adding a rule document, make its contract easy for both humans and coding agents to scan. A useful rule normally answers five questions: **when does it apply, which files does it own, what must remain unchanged, how should the work be verified, and what must be reported at handoff?**
+
+## Build Your Own Site With Codex
+
+You can use this repository as a reference for building a personal portfolio or product site with Codex. The valuable part is not copying the visual identity; it is adapting the combination of a small static stack, explicit design direction, and repository-local rules.
+
+### 1. Create your working copy
+
+Fork this repository on GitHub, or clone it and connect it to a new remote:
+
+```bash
+git clone https://github.com/Duoasa/Duoasa-Design.git my-design-site
+cd my-design-site
+```
+
+Keep the HTML, CSS, and JavaScript structure if you want a lightweight static site, or replace the implementation while preserving the rule-driven workflow.
+
+### 2. Replace the project identity
+
+Update the homepage content, project entries, contact information, metadata, logo, favicon, and images. Store project-specific assets under a dedicated directory instead of mixing them into global folders. Remove any Duoasa-specific content or rules that do not apply to your site.
+
+### 3. Turn `AGENTS.md` into your rule index
+
+Describe the repository-wide behavior Codex must follow, then route specialized tasks to focused rule documents. Start with rules that protect the highest-risk areas of your site, such as:
+
+- project detail-page ownership and isolation
+- shared design tokens and global navigation
+- external motion or WebGL component integration
+- responsive breakpoints and accessibility expectations
+- asset storage, cache versions, preview checks, and deployment
+
+Keep each trigger concrete. For example: “Read `docs/motion-rules.md` before importing or modifying any canvas, WebGL, shader, or pointer-reactive component.”
+
+### 4. Give Codex a scoped build request
+
+Ask Codex to read the rule index first, name the surface it will change, and preserve everything outside that scope. A practical first prompt can be:
+
+```text
+Read AGENTS.md and the rule files it routes to before editing.
+Replace the homepage identity and project content with my portfolio material.
+Preserve the existing responsive behavior and motion system.
+Run a local preview, check desktop and mobile layouts, and summarize every changed file.
+Do not modify finished project pages unless the rules explicitly require it.
+```
+
+For visual changes, attach a screenshot or reference image and describe the intended user outcome. Review the rendered result, then move repeated corrections into a rule document instead of relying on chat history.
+
+### 5. Preview and review locally
+
+The main site requires no build step. From the repository root, run:
+
+```bash
+python3 -m http.server 4173
+```
+
+Open `http://127.0.0.1:4173`, inspect the changed route, and check at least one desktop and one mobile viewport. Verify content, links, responsive layout, motion fallbacks, console errors, and any cache-version changes required by edited CSS or JavaScript.
+
+### 6. Deploy deliberately
+
+Connect your fork to the hosting platform you prefer. This repository uses Cloudflare Workers Static Assets, but the static output can also be hosted on GitHub Pages, Cloudflare Pages, Netlify, Vercel, or another static host. Keep deployment-specific instructions in the repository so Codex knows which branch, command, and verification steps are safe to use.
+
+The resulting workflow is deliberately simple: **describe intent, let Codex implement inside explicit rules, review the real page, promote durable decisions into Markdown, and repeat.**
 
 ## Motion And Open-source References
 
