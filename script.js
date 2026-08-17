@@ -212,6 +212,12 @@ if (window.matchMedia("(pointer: fine)").matches && cursor) {
           cursorLabelText.textContent = "View QuotaView";
           cursorLabelText.style.opacity = "1";
         }, 120);
+      } else if (item.dataset.cursor === "deepviewer") {
+        cursorLabelText.style.opacity = "0";
+        setTimeout(() => {
+          cursorLabelText.textContent = "View DeepViewer";
+          cursorLabelText.style.opacity = "1";
+        }, 120);
       }
     });
 
